@@ -23,7 +23,9 @@ func Login(c *gin.Context) {
 	c.HTML(
 		http.StatusOK,
 		"login",
-		gin.H{},
+		gin.H{
+			"pass": "0",
+		},
 	)
 }
 
@@ -32,6 +34,7 @@ func LoginUser(c *gin.Context) {
 	password := c.Request.PostFormValue("password")
 	checkEmail := c.Request.PostFormValue("checkEmail")
 	checkPassword := c.Request.PostFormValue("checkPassword")
+	passFound := "0"
 	h := sha1.New()
 	h.Write([]byte(password))
 	sha1_hash := hex.EncodeToString(h.Sum(nil))
@@ -44,7 +47,7 @@ func LoginUser(c *gin.Context) {
 	}
 
 	if checkPassword == "on" {
-		hibp.CheckEmail(username)
+		passFound = hibp.CheckPassword(sha1_hash)
 	}
 
 	// val := query.NewUser(conn, username, string(hashedPassword))
@@ -53,6 +56,7 @@ func LoginUser(c *gin.Context) {
 		"login",
 		gin.H{
 			"status": "OK",
+			"pass":   passFound,
 		},
 	)
 }

@@ -1,5 +1,7 @@
 {{define "login"}}
 {{template "header" .}}
+
+
 <!-- Page Header-->
 <header class="masthead" style="background-image: url('assets/img/about-bg.jpg')">
     <div class="container position-relative px-4 px-lg-5">
@@ -7,7 +9,13 @@
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="page-heading">
                     <h1>Login</h1>
-                    <form style="background-color: white; text-align: left; padding: 5px; border-radius: 5px;" method="post">
+                    <form style="background-color: white; text-align: left; padding: 5px; border-radius: 5px;"
+                        method="post">
+                        {{ if ne .pass "0"}}
+                        <div class="alert alert-danger" role="alert">
+                            Oh no! Your password was breached {{.pass}} times!
+                        </div>
+                        {{ end }}
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
                             <input type="email" name="email" class="form-control" id="exampleInputEmail1"
@@ -26,7 +34,8 @@
                             <input type="checkbox" name="checkPassword" class="form-check-input" id="passwordCheck">
                             <label class="form-check-label" for="passwordCheck">Check password security</label>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="text-align: center;" formaction="/login">Submit</button>
+                        <button type="submit" class="btn btn-primary" style="text-align: center;"
+                            formaction="/login">Submit</button>
                     </form>
                 </div>
             </div>
