@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"hibp.ssd.com/hibp"
-
 	"github.com/gin-gonic/gin"
+	"hibp.ssd.com/hibp"
 )
 
 func Home(c *gin.Context) {
@@ -55,6 +54,10 @@ func LoginUser(c *gin.Context) {
 			"status": "OK",
 		},
 	)
+}
+
+func Test(c *gin.Context) {
+	fmt.Println("Reached limit")
 }
 
 func About(c *gin.Context) {
