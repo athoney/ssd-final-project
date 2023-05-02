@@ -5,9 +5,10 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net/http"
+	"time"
 
+	ratelimit "github.com/JGLTechnologies/gin-rate-limit"
 	"github.com/gin-gonic/gin"
-	"hibp.ssd.com/hibp"
 )
 
 func Home(c *gin.Context) {
@@ -26,27 +27,26 @@ func Login(c *gin.Context) {
 	)
 }
 
-func LoginUser(c *gin.Context) {
-	username := c.Request.PostFormValue("email")
+func CheckSecurity(c *gin.Context) {
+	// Get email and password from form
+	email := c.Request.PostFormValue("email")
 	password := c.Request.PostFormValue("password")
-	checkEmail := c.Request.PostFormValue("checkEmail")
-	checkPassword := c.Request.PostFormValue("checkPassword")
+
+	// Hash password
 	h := sha1.New()
 	h.Write([]byte(password))
 	sha1_hash := hex.EncodeToString(h.Sum(nil))
-	fmt.Printf("username: %s\n", username)
+
+	//Print info
+	fmt.Printf("username: %s\n", email)
 	fmt.Printf("password: %s\n", sha1_hash)
-	fmt.Printf("check email: %s\n", checkEmail)
-	fmt.Printf("check password: %s\n", checkPassword)
-	if checkEmail == "on" {
-		hibp.CheckEmail(username)
-	}
 
-	if checkPassword == "on" {
-		hibp.CheckEmail(username)
-	}
+	// Check Password
+	// passInfo := hibp.CheckPassword(password)
 
-	// val := query.NewUser(conn, username, string(hashedPassword))
+	// Check email
+	// emailInfo := hibp.CheckEmail(email)
+
 	c.HTML(
 		http.StatusOK,
 		"login",
@@ -56,8 +56,15 @@ func LoginUser(c *gin.Context) {
 	)
 }
 
-func Test(c *gin.Context) {
-	fmt.Println("Reached limit")
+func ErrorHandler(c *gin.Context, info ratelimit.Info) {
+	// c.String(429, "Too many requests. Try again in "+time.Until(info.ResetTime).String())
+	c.HTML(
+		http.StatusOK,
+		"home",
+		gin.H{
+			"Time": time.Until(info.ResetTime).String(),
+		},
+	)
 }
 
 func About(c *gin.Context) {
@@ -80,14 +87,6 @@ func Contact(c *gin.Context) {
 	c.HTML(
 		http.StatusOK,
 		"contact",
-		gin.H{},
-	)
-}
-
-func Admin(c *gin.Context) {
-	c.HTML(
-		http.StatusOK,
-		"admin",
 		gin.H{},
 	)
 }

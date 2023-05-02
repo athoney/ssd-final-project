@@ -12,10 +12,6 @@ func keyFunc(c *gin.Context) string {
 	return c.ClientIP()
 }
 
-func errorHandler(c *gin.Context, info ratelimit.Info) {
-	c.String(429, "Too many requests. Try again in "+time.Until(info.ResetTime).String())
-}
-
 func main() {
 	r := gin.Default()
 	r.NoRoute(api.FOF)
@@ -23,10 +19,10 @@ func main() {
 	// This makes it so each ip can only make 5 requests per second
 	store := ratelimit.InMemoryStore(&ratelimit.InMemoryOptions{
 		Rate:  time.Minute,
-		Limit: 5,
+		Limit: 2,
 	})
 	mw := ratelimit.RateLimiter(store, &ratelimit.Options{
-		ErrorHandler: errorHandler,
+		ErrorHandler: api.ErrorHandler,
 		KeyFunc:      keyFunc,
 	})
 
@@ -34,8 +30,7 @@ func main() {
 	r.GET("/", api.Home)
 	r.GET("/about", api.About)
 	r.GET("/login", api.Login)
-	r.POST("/login", api.LoginUser)
-	r.POST("/login/email", mw, api.LoginUser)
+	r.POST("/login", mw, api.CheckSecurity)
 	r.GET("/post", api.Post)
 	r.GET("/contact", api.Contact)
 

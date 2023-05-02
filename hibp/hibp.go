@@ -21,8 +21,26 @@ func Open() *APIConn {
 	}
 }
 
-func CheckEmail(email string) {
-	print("Hello world")
+func CheckEmail(email string) string {
+	req, err := http.NewRequest(
+		http.MethodGet,
+		"https://haveibeenpwned.com/api/v3/breachedaccount/"+email+"?truncateResponse=false",
+		nil,
+	)
+	if err != nil {
+		log.Fatalf("error creating HTTP request: %v", err)
+	}
+
+	// req.Header.Add("Accept", "application/json")
+	req.Header.Add("hibp-api-key", os.Getenv("KEY"))
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatalf("error sending HTTP request: %v", err)
+	}
+
+	fmt.Println(res)
+	return "hi"
 }
 
 func (c *APIConn) read(ctx context.Context, email string) (string, error) {
