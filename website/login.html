@@ -12,9 +12,35 @@
                     <form style="background-color: white; text-align: left; padding: 5px; border-radius: 5px;"
                         method="post">
                         {{ if ne .pass "0"}}
-                        <div class="alert alert-danger" role="alert">
+                        <!-- <div class="alert alert-danger" role="alert">
                             Oh no! Your password was breached {{.pass}} times!
-                        </div>
+                        </div> -->
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                var myModal = new bootstrap.Modal(document.getElementById("myModal"));
+                                myModal.show();
+                            });
+                            </script>
+                            
+                            <!-- Modal HTML -->
+                            <div id="myModal" class="modal fade" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color:red">WARNING!</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body" style="text-align: center">
+                                            <p><bold>The password that you have entered was found in {{.pass}} breaches.</bold></p>
+                                            <p><small>Would you like to continue anyway?</small></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Try Again</button>
+                                            <button type="button" class="btn btn-primary">Continue</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         {{ end }}
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
