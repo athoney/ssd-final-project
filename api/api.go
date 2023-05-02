@@ -9,6 +9,7 @@ import (
 
 	ratelimit "github.com/JGLTechnologies/gin-rate-limit"
 	"github.com/gin-gonic/gin"
+	"hibp.ssd.com/hibp"
 )
 
 func Home(c *gin.Context) {
@@ -44,16 +45,17 @@ func CheckSecurity(c *gin.Context) {
 	fmt.Printf("password: %s\n", sha1_hash)
 
 	// Check Password
-	// passInfo := hibp.CheckPassword(password)
+	passInfo := hibp.CheckPassword(sha1_hash)
 
 	// Check email
-	// emailInfo := hibp.CheckEmail(email)
+	_ = hibp.CheckEmail(email)
 
 	c.HTML(
 		http.StatusOK,
 		"login",
 		gin.H{
-			"status": "OK",
+			"status":   "OK",
+			"password": passInfo,
 		},
 	)
 }

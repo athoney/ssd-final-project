@@ -1,7 +1,6 @@
 package hibp
 
 import (
-	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -34,30 +33,25 @@ func CheckEmail(email string) string {
 	}
 
 	// req.Header.Add("Accept", "application/json")
-	req.Header.Add("hibp-api-key", os.Getenv("KEY"))
+	fmt.Println("Key:" + os.Getenv("KEY"))
+	req.Header.Add("hibp-api-key", "aca6d5f51e824114bdc8a79924d69f5d")
 
-	res, err := http.DefaultClient.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Fatalf("error sending HTTP request: %v", err)
 	}
 
-	fmt.Println(res)
-	return "hi"
-}
-
-func (c *APIConn) read(ctx context.Context, email string) (string, error) {
-	key := os.Getenv("KEY")
-	if err := c.rateLimiter.Wait(ctx); err != nil {
-		return "", err
-	}
-
-	resp, err := http.Get("https://haveibeenpwned.com/api/v3/breachedaccount/alicia.thoney@gmail.com?truncateResponse=false?hibp-api-key=" + key)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Print(resp)
-	//DoWork
-	return "Read", nil
+	sb := string(body)
+
+	// for index, element := range resp.Body {
+
+	// }
+	fmt.Println(sb)
+	return "hi"
 }
 
 func CheckPassword(password string) string {
@@ -77,8 +71,8 @@ func CheckPassword(password string) string {
 	s := strings.Split(sb, "\n")
 
 	for i := 1; i < len(s); i++ {
-		fmt.Println(s[i])
-		fmt.Println(password)
+		// fmt.Println(s[i])
+		// fmt.Println(password)
 		if strings.Contains(strings.ToUpper(password), s[i][0:35]) {
 
 			//fmt.Printf("Password Found %s times", s[i][37:])
