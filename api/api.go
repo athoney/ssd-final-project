@@ -23,7 +23,9 @@ func Login(c *gin.Context) {
 	c.HTML(
 		http.StatusOK,
 		"login",
-		gin.H{},
+		gin.H{
+			"pass": "0",
+		},
 	)
 }
 
