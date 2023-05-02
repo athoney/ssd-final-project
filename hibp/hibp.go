@@ -34,7 +34,7 @@ func CheckPassword(password string) string {
 		if strings.Contains(strings.ToUpper(password), s[i][0:35]) {
 
 			//fmt.Printf("Password Found %s times", s[i][37:])
-			return s[i][37:]
+			return s[i][36:]
 		}
 	}
 	fmt.Println("Password safe")
