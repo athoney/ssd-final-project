@@ -50,9 +50,11 @@ func CheckSecurity(c *gin.Context) {
 	// Check email
 	emailInfo := hibp.CheckEmail(email)
 
-	print(len(emailInfo))
+	page := "home"
 
-	page := "login"
+	if passInfo != "0" || emailInfo != "" {
+		page = "summary"
+	}
 
 	c.HTML(
 		http.StatusOK,
@@ -60,6 +62,7 @@ func CheckSecurity(c *gin.Context) {
 		gin.H{
 			"status":   "OK",
 			"password": passInfo,
+			"email":    "",
 		},
 	)
 }
