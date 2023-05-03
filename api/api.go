@@ -48,14 +48,21 @@ func CheckSecurity(c *gin.Context) {
 	passInfo := hibp.CheckPassword(sha1_hash)
 
 	// Check email
-	_ = hibp.CheckEmail(email)
+	emailInfo := hibp.CheckEmail(email)
+
+	page := "home"
+
+	if passInfo != "0" || emailInfo != "" {
+		page = "summary"
+	}
 
 	c.HTML(
 		http.StatusOK,
-		"login",
+		page,
 		gin.H{
 			"status":   "OK",
 			"password": passInfo,
+			"email":    "",
 		},
 	)
 }
