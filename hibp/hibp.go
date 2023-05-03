@@ -1,28 +1,34 @@
 package hibp
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
-	"time"
-
-	"golang.org/x/time/rate"
 )
 
-type APIConn struct {
-	rateLimiter *rate.Limiter
+type response struct {
+	name         string   `json:"Name"`
+	title        string   `json:"Title"`
+	domain       string   `json:"Domain"`
+	breachDate   string   `json:"BreachDate"`
+	AddedDate    string   `json:"AddedDate"`
+	ModifiedDate string   `json:"ModifiedDate"`
+	PwnCount     int      `json:"PwnCount"`
+	Description  string   `json:"Description"`
+	DataClasses  []string `json:"DataClasses"`
+	IsVerified   bool     `json:"IsVerified"`
+	IsFabricated bool     `json:"IsFabricated"`
+	IsSensitive  bool     `json:"IsSensitive"`
+	IsRetired    bool     `json:"IsRetired"`
+	IsSpamList   bool     `json:"IsSpamList"`
+	LogoPath     string   `json:"LogoPath"`
 }
 
-func Open() *APIConn {
-	return &APIConn{
-		rateLimiter: rate.NewLimiter(rate.Every(time.Minute), 3),
-	}
-}
-
-func CheckEmail(email string) string {
+func CheckEmail(email string) []string {
 	req, err := http.NewRequest(
 		http.MethodGet,
 		"https://haveibeenpwned.com/api/v3/breachedaccount/"+email+"?truncateResponse=false",
@@ -41,17 +47,17 @@ func CheckEmail(email string) string {
 		log.Fatalf("error sending HTTP request: %v", err)
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
+	decoder := json.NewDecoder(resp.Body)
+	var emailInfo []response
+	err = decoder.Decode(&emailInfo)
+
+	var emailResp []string
+	for _, breach := range emailInfo {
+		// fmt.Printf(breach.Description)
+		emailResp = append(emailResp, breach.Description)
 	}
-	sb := string(body)
 
-	// for index, element := range resp.Body {
-
-	// }
-	fmt.Println(sb)
-	return "hi"
+	return emailResp
 }
 
 func CheckPassword(password string) string {
