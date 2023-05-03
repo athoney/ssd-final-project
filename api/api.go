@@ -3,7 +3,6 @@ package api
 import (
 	"crypto/sha1"
 	"encoding/hex"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -40,10 +39,6 @@ func CheckSecurity(c *gin.Context) {
 	h.Write([]byte(password))
 	sha1_hash := hex.EncodeToString(h.Sum(nil))
 
-	//Print info
-	fmt.Printf("username: %s\n", email)
-	fmt.Printf("password: %s\n", sha1_hash)
-
 	// Check Password
 	passInfo := hibp.CheckPassword(sha1_hash)
 
@@ -68,7 +63,6 @@ func CheckSecurity(c *gin.Context) {
 }
 
 func ErrorHandler(c *gin.Context, info ratelimit.Info) {
-	// c.String(429, "Too many requests. Try again in "+time.Until(info.ResetTime).String())
 	c.HTML(
 		http.StatusOK,
 		"home",

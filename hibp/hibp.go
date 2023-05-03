@@ -30,7 +30,9 @@ type response struct {
 	LogoPath     string   `json:"LogoPath"`
 }
 
+// Check if email is returned from API
 func CheckEmail(email string) []string {
+
 	req, err := http.NewRequest(
 		http.MethodGet,
 		"https://haveibeenpwned.com/api/v3/breachedaccount/"+email+"?truncateResponse=false",
@@ -40,7 +42,6 @@ func CheckEmail(email string) []string {
 		log.Fatalf("error creating HTTP request: %v", err)
 	}
 
-	// req.Header.Add("Accept", "application/json")
 	err = godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("err loading: %v", err)
@@ -65,6 +66,7 @@ func CheckEmail(email string) []string {
 	return emailResp
 }
 
+// Check if password is returned from API
 func CheckPassword(password string) string {
 	pw := password[0:5]
 	resp, err := http.Get("https://api.pwnedpasswords.com/range/" + pw)
