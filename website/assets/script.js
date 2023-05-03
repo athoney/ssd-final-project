@@ -1,16 +1,16 @@
+
+
 document.addEventListener("DOMContentLoaded", function () {
     var myModal = new bootstrap.Modal(document.getElementById("myModal"));
     myModal.show();
+});
 
+document.addEventListener("DOMContentLoaded", function () {
     convertToHTML()
-
 });
 
 function convertToHTML() {
     breaches = document.getElementById("breaches")
-    if (breaches == ""){
-        return
-    }
     var children = breaches.children;
     for (var i = 0; i < children.length; i++) {
         // Do stuff

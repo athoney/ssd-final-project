@@ -2,13 +2,14 @@ package hibp
 
 import (
 	"encoding/json"
-	"fmt"
 	"html"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 type response struct {
@@ -40,8 +41,12 @@ func CheckEmail(email string) []string {
 	}
 
 	// req.Header.Add("Accept", "application/json")
-	fmt.Println("Key:" + os.Getenv("KEY"))
-	req.Header.Add("hibp-api-key", "aca6d5f51e824114bdc8a79924d69f5d")
+	err = godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("err loading: %v", err)
+	}
+
+	req.Header.Add("hibp-api-key", os.Getenv("KEY"))
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -54,7 +59,6 @@ func CheckEmail(email string) []string {
 
 	var emailResp []string
 	for _, breach := range emailInfo {
-		// fmt.Printf(breach.Description)
 		emailResp = append(emailResp, html.UnescapeString(breach.Description))
 	}
 
@@ -63,7 +67,6 @@ func CheckEmail(email string) []string {
 
 func CheckPassword(password string) string {
 	pw := password[0:5]
-	//fmt.Println(pw)
 	resp, err := http.Get("https://api.pwnedpasswords.com/range/" + pw)
 	if err != nil {
 		log.Fatalln(err)
@@ -78,14 +81,9 @@ func CheckPassword(password string) string {
 	s := strings.Split(sb, "\n")
 
 	for i := 1; i < len(s); i++ {
-		// fmt.Println(s[i])
-		// fmt.Println(password)
 		if strings.Contains(strings.ToUpper(password), s[i][0:35]) {
-
-			//fmt.Printf("Password Found %s times", s[i][37:])
 			return s[i][36:]
 		}
 	}
-	fmt.Println("Password safe")
 	return "0"
 }
