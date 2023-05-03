@@ -3,6 +3,7 @@ package hibp
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -54,7 +55,7 @@ func CheckEmail(email string) []string {
 	var emailResp []string
 	for _, breach := range emailInfo {
 		// fmt.Printf(breach.Description)
-		emailResp = append(emailResp, breach.Description)
+		emailResp = append(emailResp, html.UnescapeString(breach.Description))
 	}
 
 	return emailResp

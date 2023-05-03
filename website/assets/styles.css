@@ -245,6 +245,10 @@ sup {
   top: -0.5em;
 }
 
+.breach a {
+  text-decoration: underline;
+}
+
 a {
   color: var(--bs-link-color);
   text-decoration: none;

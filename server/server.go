@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"time"
 
 	ratelimit "github.com/JGLTechnologies/gin-rate-limit"
@@ -10,6 +11,10 @@ import (
 
 func keyFunc(c *gin.Context) string {
 	return c.ClientIP()
+}
+
+func noescape(str string) template.HTML {
+	return template.HTML(str)
 }
 
 func main() {

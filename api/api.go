@@ -52,7 +52,7 @@ func CheckSecurity(c *gin.Context) {
 
 	page := "home"
 
-	if passInfo != "0" || emailInfo != "" {
+	if passInfo != "0" || len(emailInfo) != 0 {
 		page = "summary"
 	}
 
@@ -62,7 +62,7 @@ func CheckSecurity(c *gin.Context) {
 		gin.H{
 			"status":   "OK",
 			"password": passInfo,
-			"email":    "",
+			"email":    emailInfo,
 		},
 	)
 }
